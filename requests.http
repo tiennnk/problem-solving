@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:8080
+
+### Ask LLM (dev profile)
+POST {{baseUrl}}/api/dev/llm/ask
+Content-Type: application/json
+
+{
+  "prompt": "Viết hàm Java đảo ngược chuỗi"
+}
+
+### Create task
+# @name createTask
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "problem": "Cho mảng số nguyên nums và số nguyên target, trả về chỉ số của hai phần tử có tổng bằng target. Mỗi input có đúng một đáp án.",
+  "language": "JAVA"
+}
+
+### Get task
+GET {{baseUrl}}/api/tasks/{{createTask.response.body.$.id}}
+
+### Get task status
+GET {{baseUrl}}/api/tasks/{{createTask.response.body.$.id}}/status
+
+### Invalid language
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "problem": "Two Sum",
+  "language": "COBOL"
+}
+
+### Missing fields
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "problem": " "
+}
+
+### Unknown task
+GET {{baseUrl}}/api/tasks/00000000-0000-0000-0000-000000000000
