@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import io.github.tiennnk.problemsolving.common.llm.LlmException;
 import io.github.tiennnk.problemsolving.task.application.TaskNotFoundException;
 import io.github.tiennnk.problemsolving.task.domain.InvalidTaskTransitionException;
 import tools.jackson.core.JacksonException;
@@ -65,6 +66,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(InvalidTaskTransitionException.class)
   ProblemDetail handleInvalidTransition(InvalidTaskTransitionException ex) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+  }
+
+  @ExceptionHandler(LlmException.class)
+  ProblemDetail handleLlmFailure(LlmException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, ex.getMessage());
   }
 
   @ExceptionHandler(ObjectOptimisticLockingFailureException.class)

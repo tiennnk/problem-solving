@@ -11,3 +11,12 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+
+llm:
+  base-url: ${LLM_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai}
+  model: ${LLM_MODEL:gemini-3.8-flash}
+  api-key: ${LLM_API_KEY:}
+  timeout: ${LLM_TIMEOUT:60s}
+  max-attempts: ${LLM_MAX_ATTEMPTS:3}
+  retry-backoff: ${LLM_RETRY_BACKOFF:2s}
+  max-retry-delay: ${LLM_MAX_RETRY_DELAY:65s}
