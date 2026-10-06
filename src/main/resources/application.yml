@@ -3,6 +3,9 @@ spring:
     name: problem-solving-orchestrator
   config:
     import: optional:file:.env[.properties]
+  threads:
+    virtual:
+      enabled: true
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
     username: ${DB_USERNAME}
