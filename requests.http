@@ -26,6 +26,16 @@ Content-Type: application/json
   "problem": "Cho mảng số nguyên nums và số nguyên target, trả về chỉ số của hai phần tử có tổng bằng target. Mỗi input có đúng một đáp án. Ràng buộc: 2 <= n <= 10^4, -10^9 <= nums[i], target <= 10^9."
 }
 
+### Run code in Docker sandbox (dev profile)
+POST {{baseUrl}}/api/dev/sandbox/run
+Content-Type: application/json
+
+{
+  "language": "JAVA",
+  "sourceCode": "import java.util.*;\npublic class Main {\n  public static void main(String[] args) {\n    Scanner in = new Scanner(System.in);\n    System.out.println(in.nextLong() + in.nextLong());\n  }\n}",
+  "inputs": ["2 3", "1000000000 1000000000", "abc"]
+}
+
 ### Create task
 # @name createTask
 POST {{baseUrl}}/api/tasks

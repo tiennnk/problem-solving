@@ -20,3 +20,14 @@ llm:
   max-attempts: ${LLM_MAX_ATTEMPTS:3}
   retry-backoff: ${LLM_RETRY_BACKOFF:2s}
   max-retry-delay: ${LLM_MAX_RETRY_DELAY:65s}
+
+sandbox:
+  docker-command: ${SANDBOX_DOCKER_COMMAND:docker}
+  java-image: eclipse-temurin:21-jdk-alpine
+  php-image: php:8.4-cli-alpine
+  memory-mb: 512
+  cpus: 1.0
+  pids-limit: 128
+  compile-timeout: 30s
+  run-timeout: 5s
+  max-output-bytes: 1000000
