@@ -162,7 +162,8 @@ public class DockerCodeSandbox implements CodeSandbox {
             properties.phpImage(),
             "main.php",
             List.of("php", "-l", WORKDIR + "/main.php"),
-            List.of("php", "-d", "memory_limit=" + heapMb + "M", WORKDIR + "/main.php"));
+            List.of("php", "-d", "memory_limit=" + heapMb + "M", "-d", "display_errors=stderr",
+                WORKDIR + "/main.php"));
       };
     }
   }

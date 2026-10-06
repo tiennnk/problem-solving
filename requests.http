@@ -36,6 +36,15 @@ Content-Type: application/json
   "inputs": ["2 3", "1000000000 1000000000", "abc"]
 }
 
+### Solve end to end: tests -> AI solution -> judge (dev profile)
+POST {{baseUrl}}/api/dev/solve
+Content-Type: application/json
+
+{
+  "problem": "Cho chuỗi s chỉ gồm các ký tự '(', ')', '{', '}', '[' và ']'. Kiểm tra chuỗi có hợp lệ không: mọi dấu mở phải được đóng bởi cùng loại dấu và đúng thứ tự. In true hoặc false. Ràng buộc: 1 <= độ dài s <= 10^4.",
+  "language": "JAVA"
+}
+
 ### Create task
 # @name createTask
 POST {{baseUrl}}/api/tasks
