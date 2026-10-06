@@ -18,6 +18,14 @@ Content-Type: application/json
   "ioSpecification": "Input: dòng 1 là n, dòng 2 là n số nguyên, dòng 3 là target. Output: hai chỉ số (bắt đầu từ 0) cách nhau bởi dấu cách, chỉ số nhỏ trước."
 }
 
+### Generate tests (dev profile)
+POST {{baseUrl}}/api/dev/tests/generate
+Content-Type: application/json
+
+{
+  "problem": "Cho mảng số nguyên nums và số nguyên target, trả về chỉ số của hai phần tử có tổng bằng target. Mỗi input có đúng một đáp án. Ràng buộc: 2 <= n <= 10^4, -10^9 <= nums[i], target <= 10^9."
+}
+
 ### Create task
 # @name createTask
 POST {{baseUrl}}/api/tasks
