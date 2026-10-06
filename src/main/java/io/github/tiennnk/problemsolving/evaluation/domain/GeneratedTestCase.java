@@ -4,5 +4,5 @@ public record GeneratedTestCase(
     TestCaseCategory category,
     String description,
     String input,
-    String expectedOutput) {
+    String claimedOutput) {
 }

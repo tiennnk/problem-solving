@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import io.github.tiennnk.problemsolving.common.llm.LlmException;
+import io.github.tiennnk.problemsolving.evaluation.application.TestSuitePreparationException;
+import io.github.tiennnk.problemsolving.execution.application.SandboxException;
 import io.github.tiennnk.problemsolving.task.application.TaskNotFoundException;
 import io.github.tiennnk.problemsolving.task.domain.InvalidTaskTransitionException;
 import tools.jackson.core.JacksonException;
@@ -71,6 +73,16 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(LlmException.class)
   ProblemDetail handleLlmFailure(LlmException ex) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, ex.getMessage());
+  }
+
+  @ExceptionHandler(TestSuitePreparationException.class)
+  ProblemDetail handleTestSuitePreparation(TestSuitePreparationException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, ex.getMessage());
+  }
+
+  @ExceptionHandler(SandboxException.class)
+  ProblemDetail handleSandboxFailure(SandboxException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
   }
 
   @ExceptionHandler(ObjectOptimisticLockingFailureException.class)

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.tiennnk.problemsolving.evaluation.application.TestGenerator;
-import io.github.tiennnk.problemsolving.evaluation.domain.GeneratedTestSuite;
+import io.github.tiennnk.problemsolving.evaluation.application.TestSuiteService;
+import io.github.tiennnk.problemsolving.evaluation.domain.VerifiedTestSuite;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,15 +17,15 @@ import jakarta.validation.constraints.Size;
 @RequestMapping("/api/dev/tests")
 public class TestGeneratorPlaygroundController {
 
-  private final TestGenerator testGenerator;
+  private final TestSuiteService testSuiteService;
 
-  public TestGeneratorPlaygroundController(TestGenerator testGenerator) {
-    this.testGenerator = testGenerator;
+  public TestGeneratorPlaygroundController(TestSuiteService testSuiteService) {
+    this.testSuiteService = testSuiteService;
   }
 
   @PostMapping("/generate")
-  public GeneratedTestSuite generate(@Valid @RequestBody GenerateRequest request) {
-    return testGenerator.generate(request.problem());
+  public VerifiedTestSuite generate(@Valid @RequestBody GenerateRequest request) {
+    return testSuiteService.prepare(request.problem());
   }
 
   public record GenerateRequest(@NotBlank @Size(max = 20_000) String problem) {

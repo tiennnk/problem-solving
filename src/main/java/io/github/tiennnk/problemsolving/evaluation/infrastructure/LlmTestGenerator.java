@@ -40,21 +40,26 @@ public class LlmTestGenerator implements TestGenerator {
          - Prefer: numbers separated by spaces; an array as one line with its length followed by one line with its elements.
          - The output format must make the correct answer unique (for example: "indices in ascending order",
            "print -1 if there is no answer", "print true or false in lowercase").
-      2. Write 8 to 12 test cases in three categories:
+      2. Write 8 to 12 test inputs in three categories:
          - BASIC: typical cases, including the examples from the statement.
          - EDGE: tricky cases such as duplicates, negative numbers, zeros, minimum length, all equal values.
-         - BOUNDARY: extreme values allowed by the constraints, but keep every input shorter than 2000 characters.
-      3. Compute every expected output by hand, step by step, and double-check it.
-         Only include a test if you are certain its expected output is correct and unique.
+         - BOUNDARY: extreme values allowed by the constraints, but keep every input shorter than 2000 characters
+           and small enough for a brute-force solution to finish within one second.
+         For each test also give the output you expect. It will be cross-checked by running code.
+      3. Write a reference solution in Java 21 that solves the problem with the simplest, most obviously correct
+         brute-force method. Correctness matters far more than speed.
+         - One file containing `public class Main` with `public static void main(String[] args)`, no package.
+         - Read the input exactly as described in inputFormat and print exactly as described in outputFormat.
       Respond with a single JSON object and nothing else:
       {
         "inputFormat": "...",
         "outputFormat": "...",
+        "referenceSolution": "...",
         "tests": [
           {"category": "BASIC|EDGE|BOUNDARY", "description": "...", "input": "...", "expectedOutput": "..."}
         ]
       }
-      Use "\\n" for line breaks inside input and expectedOutput.
+      Use "\\n" for line breaks inside strings.
       """;
 
   private final LlmClient llmClient;
@@ -77,9 +82,18 @@ public class LlmTestGenerator implements TestGenerator {
     return new GeneratedTestSuite(
         requireText(payload.inputFormat(), "inputFormat"),
         requireText(payload.outputFormat(), "outputFormat"),
+        validReferenceSolution(payload.referenceSolution()),
         testCases,
         response.model(),
         response.usage());
+  }
+
+  private static String validReferenceSolution(String referenceSolution) {
+    String source = stripCodeFence(requireText(referenceSolution, "referenceSolution"));
+    if (!source.contains("class Main") || !source.contains("static void main")) {
+      throw new InvalidLlmOutputException("Reference solution must declare class Main with a main method");
+    }
+    return source;
   }
 
   private SuitePayload parse(String content) {
@@ -104,7 +118,7 @@ public class LlmTestGenerator implements TestGenerator {
       }
       TestCaseCategory category = parseCategory(test.category());
       String input = normalizeNewlines(test.input() == null ? "" : test.input());
-      String expectedOutput = normalizeNewlines(requireText(test.expectedOutput(), "expectedOutput"));
+      String claimedOutput = normalizeNewlines(requireText(test.expectedOutput(), "expectedOutput"));
       if (input.length() > MAX_INPUT_LENGTH) {
         throw new InvalidLlmOutputException("Test input is longer than " + MAX_INPUT_LENGTH + " characters");
       }
@@ -113,7 +127,7 @@ public class LlmTestGenerator implements TestGenerator {
       }
       categories.add(category);
       String description = test.description() == null ? "" : test.description().strip();
-      testCases.add(new GeneratedTestCase(category, description, ensureTrailingNewline(input), expectedOutput));
+      testCases.add(new GeneratedTestCase(category, description, ensureTrailingNewline(input), claimedOutput));
     }
 
     if (testCases.size() < MIN_TESTS || testCases.size() > MAX_TESTS) {
@@ -155,7 +169,7 @@ public class LlmTestGenerator implements TestGenerator {
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
-  record SuitePayload(String inputFormat, String outputFormat, List<TestPayload> tests) {
+  record SuitePayload(String inputFormat, String outputFormat, String referenceSolution, List<TestPayload> tests) {
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
