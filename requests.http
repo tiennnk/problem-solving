@@ -8,6 +8,16 @@ Content-Type: application/json
   "prompt": "Viết hàm Java đảo ngược chuỗi"
 }
 
+### Solve with coding worker (dev profile)
+POST {{baseUrl}}/api/dev/workers/solve
+Content-Type: application/json
+
+{
+  "problem": "Cho mảng số nguyên nums và số nguyên target, trả về chỉ số của hai phần tử có tổng bằng target. Mỗi input có đúng một đáp án.",
+  "language": "JAVA",
+  "ioSpecification": "Input: dòng 1 là n, dòng 2 là n số nguyên, dòng 3 là target. Output: hai chỉ số (bắt đầu từ 0) cách nhau bởi dấu cách, chỉ số nhỏ trước."
+}
+
 ### Create task
 # @name createTask
 POST {{baseUrl}}/api/tasks
